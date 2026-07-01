@@ -443,7 +443,7 @@ body::before {
 }
 .temp-perfect-zone {
   position: absolute; top: -4px; bottom: -4px;
-  left: 50%; width: 12%; transform: translateX(-50%);
+  left: 50%; width: 10%; transform: translateX(-50%);
   border: 2px solid var(--yellow); border-radius: 8px;
   box-shadow: 0 0 10px rgba(251,191,36,0.5);
   pointer-events: none;
@@ -1148,11 +1148,11 @@ function tempAction() {
     const temp = 18 + (state.position/100)*10;
     const tempRound = Math.round(temp);
     let score, msg;
-    if(tempRound>=23&&tempRound<=24){score=100;msg='DX 사무실 평화 협정 체결!';}
-    else if(tempRound===22||tempRound===25){score=85;msg='둘 다 이 정도면 참을 만합니다.';}
-    else if(tempRound===21||tempRound===26){score=70;msg='한쪽 눈치가 조금 보입니다.';}
-    else if(tempRound===20||tempRound===27){score=50;msg=tempRound<=20?'세웅 자리 이탈 위기!':'승혁 자리 이탈 위기!';}
-    else{score=20;msg=tempRound<=19?'세웅은 버틸 수 없어..!':'승혁은 버틸 수 없어..!';}
+    if(temp>=22.5&&temp<=23.5){score=100;msg='DX 사무실 평화 협정 체결!';}
+    else if(temp>=21.5&&temp<22.5||temp>23.5&&temp<=24.5){score=85;msg='둘 다 이 정도면 참을 만합니다.';}
+    else if(temp>=20.5&&temp<21.5||temp>24.5&&temp<=25.5){score=70;msg='한쪽 눈치가 조금 보입니다.';}
+    else if(temp>=19.5&&temp<20.5||temp>25.5&&temp<=26.5){score=50;msg=temp<21?'세웅 자리 이탈 위기!':'승혁 자리 이탈 위기!';}
+    else{score=20;msg=temp<20?'세웅은 버틸 수 없어..!':'승혁은 버틸 수 없어..!';}
     btn.style.display='none';
     document.getElementById('tempHint').textContent = '멈춘 온도: '+temp.toFixed(1)+'℃';
     document.getElementById('gameArea').insertAdjacentHTML('beforeend',`<div class="game-result"><div class="score">${score}점</div><div class="message">${msg}<br><span style="font-size:0.8em;color:var(--text-muted)">사무실 평화도: ${score}%</span></div></div>`);
@@ -1345,14 +1345,14 @@ function startRiddleGame() {
   const answer = riddle.answer;
   const area = document.getElementById('gameArea');
   area.innerHTML = `
-    <h2>🤔 STAGE 4: 다섯고개</h2>
-    <p class="game-desc">단서를 하나씩 열어 정답을 맞혀보세요! (제출 기회: 1회)</p>
+    <h2>🤔 STAGE 5: 다섯고개</h2>
+    <p class="game-desc">단서를 적게 열고 맞힐수록 더 높은 점수를 받을 수 있어요!</p>
     <div class="riddle-container">
+      <button class="btn btn-small" id="revealBtn" onclick="revealClue()" style="margin-bottom:12px">🔍 단서 보기</button>
+      <p style="margin:8px 0;color:var(--text-muted);font-size:0.85em">공개된 단서: <strong id="clueCount">0</strong>/5</p>
       <div class="clue-cards" id="clueCards">
         ${clues.map((c,i)=>`<div class="clue-card hidden-clue" id="clue${i}">${c}</div>`).join('')}
       </div>
-      <p style="margin:12px 0;color:var(--text-muted);font-size:0.85em">공개된 단서: <strong id="clueCount">0</strong>/5</p>
-      <button class="btn btn-small" id="revealBtn" onclick="revealClue()">🔍 단서 보기</button>
       <div style="margin-top:20px;display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap">
         <input type="text" class="riddle-input" id="riddleAnswer" placeholder="정답 입력" maxlength="20">
         <button class="btn btn-secondary" onclick="submitRiddle()">✓ 제출</button>
@@ -1477,17 +1477,17 @@ function startSnackGame() {
 function snackGameStart() {
   const state = window._snack;
   const orderItems = [
-    {name:'두바이 초코과자',icon:'🍫',type:'order'},{name:'새콤한 지렁이 젤리',icon:'🍬',type:'order'},
+    {name:'두바이 초코과자',icon:'🍫',type:'order'},{name:'새콤한 지렁이 모양 젤리',icon:'🐛',type:'order'},
     {name:'저칼로리 단백칩',icon:'💪',type:'order'},{name:'멈출 수 없는 어포튀각',icon:'🐟',type:'order'},
     {name:'건강한 견과류',icon:'🥜',type:'order'},{name:'다이어트 제로콜라',icon:'🥤',type:'order'},
     {name:'반숙란',icon:'🥚',type:'order'},{name:'영화관 뺨치는 팝콘',icon:'🍿',type:'order'},
     {name:'고칼로리 단백질바',icon:'🏋️',type:'order'}
   ];
   const cleanItems = [
-    {name:'썩은 계란',icon:'🤢',type:'clean'},{name:'이름 없는 샐러드',icon:'🥗',type:'clean'},
+    {name:'곧 부화할 계란',icon:'🐣',type:'clean'},{name:'이름 없는 샐러드',icon:'🥗',type:'clean'},
     {name:'정체불명의 검은 봉지',icon:'🗑️',type:'clean'},{name:'오래된 두유',icon:'🥛',type:'clean'},
     {name:'먹다 남은 케이크',icon:'🍰',type:'clean'},{name:'주인없는 음료',icon:'🧃',type:'clean'},
-    {name:'곰팡이 반찬통',icon:'🦠',type:'clean'},{name:'탄산 빠진 콜라',icon:'🫗',type:'clean'}
+    {name:'곰팡이 반찬통',icon:'🥘',type:'clean'},{name:'탄산 빠진 콜라',icon:'🫗',type:'clean'}
   ];
   // 주문 5개 + 청소 5개 = 10개 랜덤
   const shuffle = arr => arr.sort(()=>Math.random()-0.5);
@@ -1575,7 +1575,10 @@ function endSnackGame() {
   else if(score>=60) msg='간식은 채웠고, 냉장고도 대충 살았습니다.';
   else if(score>=40) msg='재환의 한숨이 들립니다.';
   else msg='성현 장바구니와 재환 청소통이 뒤바뀌었습니다.';
-  document.getElementById('gameArea').insertAdjacentHTML('beforeend',`<div class="game-result"><div class="score">${score}점</div><div class="message">${msg}</div></div>`);
+  document.getElementById('gameArea').innerHTML = `
+    <h2>🍪 STAGE 6: 간식창고 대소동</h2>
+    <div class="game-result"><div class="score">${score}점</div><div class="message">${msg}</div></div>
+  `;
   saveResult(16, score);
 }
 
@@ -1631,8 +1634,8 @@ function showResult() {
       </div>
 
       <!-- MVP 시상식 (최상단) -->
-      <div style="margin-top:24px;animation:popIn 0.6s ease 0.2s both;position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(251,191,36,0.12),rgba(245,158,11,0.08));border:2px solid rgba(251,191,36,0.4);padding:28px 20px;border-radius:var(--radius)">
-        <div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-size:2em;animation:float 2s ease-in-out infinite">👑</div>
+      <div style="margin-top:24px;animation:popIn 0.6s ease 0.2s both;position:relative;background:linear-gradient(135deg,rgba(251,191,36,0.12),rgba(245,158,11,0.08));border:2px solid rgba(251,191,36,0.4);padding:28px 20px;border-radius:var(--radius);text-align:center">
+        <div style="font-size:2em;animation:float 2s ease-in-out infinite">👑</div>
         <p style="font-size:0.8em;letter-spacing:3px;color:var(--yellow);margin-top:12px">★ 오늘의 기록 ★</p>
         <p style="font-size:1.8em;font-weight:900;color:var(--yellow);margin-top:8px">${mvp.name}</p>
         <p style="font-size:1.1em;color:var(--text-muted);margin-top:4px">${mvp.score}점</p>
