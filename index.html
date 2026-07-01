@@ -391,10 +391,12 @@ body::before {
 .mole-hole::after {
   content: ''; position: absolute; bottom: 0; left: 10%; width: 80%; height: 14px;
   background: rgba(74,54,96,0.5); border-radius: 50%; z-index: 1;
+  pointer-events: none;
 }
 .mole-char {
   font-size: 2.2em; position: absolute; bottom: -50px;
   transition: bottom 0.2s ease; z-index: 2;
+  pointer-events: none;
 }
 .mole-char.mole-up { bottom: 12px; }
 .mole-char.mole-hit { bottom: 12px; transform: scale(1.6); opacity: 0.8; transition: all 0.15s ease; }
@@ -402,6 +404,7 @@ body::before {
 .mole-checklist {
   background: var(--card-bg); border: 2px solid var(--locked);
   border-radius: var(--radius); padding: 16px; min-width: 180px;
+  align-self: stretch; display: flex; flex-direction: column; justify-content: center;
 }
 .mole-check-item {
   padding: 6px 10px; margin-bottom: 4px; font-size: 0.8em;
@@ -440,7 +443,7 @@ body::before {
 }
 .temp-perfect-zone {
   position: absolute; top: -4px; bottom: -4px;
-  left: 50%; width: 20%; transform: translateX(-50%);
+  left: 50%; width: 12%; transform: translateX(-50%);
   border: 2px solid var(--yellow); border-radius: 8px;
   box-shadow: 0 0 10px rgba(251,191,36,0.5);
   pointer-events: none;
@@ -536,9 +539,9 @@ body::before {
 .pixel-char.male .px-legs { background: #374151; }
 
 /* === 카드 게임 === */
-.card-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; max-width: 380px; margin: 0 auto; }
+.card-grid { display: grid; grid-template-columns: repeat(6,1fr); gap: 8px; max-width: 520px; margin: 0 auto; }
 .memory-card {
-  width: 76px; height: 86px; border-radius: 12px;
+  width: 72px; height: 80px; border-radius: 12px;
   cursor: pointer; position: relative; user-select: none;
 }
 .card-front,.card-back {
@@ -548,8 +551,12 @@ body::before {
 }
 .card-front {
   background: linear-gradient(135deg, var(--primary), var(--pink));
-  font-size: 2em;
+  border: 2px solid rgba(255,255,255,0.1);
+  overflow: hidden;
   opacity: 0; transform: scale(0.8);
+}
+.card-front img {
+  width: 100%; height: 100%; object-fit: cover; border-radius: 10px;
 }
 .card-back {
   background: linear-gradient(135deg, #4a3660, #3d2a52);
@@ -828,7 +835,8 @@ body::before {
           <div class="pixel-char male"><div class="px-head" style="background:#4a3728"></div><div class="px-body" style="background:#8b5cf6"></div><div class="px-legs"></div></div>
           <div class="pixel-char female"><div class="px-head" style="background:#8b5e3c"></div><div class="px-body" style="background:#fb923c"></div><div class="px-legs" style="background:#f472b6"></div></div>
         </div>
-        <p class="game-desc" style="margin-top:20px">One team One vision, DX 오늘도 화이팅! 🔥</p>
+        <p class="game-desc" style="margin-top:20px;line-height:1.8">사무실 일상 속 소소한 즐거움!<br>일과 시간에 따라 오픈되는 게임을 클리어하고, 그날의 팀 MVP를 선정하는 게임입니다.<br><br><strong>One team One vision, DX 오늘도 화이팅! 🔥</strong></p>
+        <p style="font-size:0.7em;color:var(--text-muted);margin-top:12px;line-height:1.6;opacity:0.7">※ 데모 버전은 모든 스테이지를 언제든 들어갈 수 있게 열어두었습니다.<br>※ 우측 상단 타이틀 클릭시 Reset이 가능합니다.</p>
       </div>
       <div class="arcade-controls">
         <div class="arcade-btn-deco" style="background:linear-gradient(135deg,#c084fc,#9333ea)"></div>
@@ -904,7 +912,7 @@ function resetApp() {
   document.getElementById('nameModal').classList.remove('hidden');
   document.getElementById('nameInput').value = '';
   updateHeader(); renderTimetable();
-  document.getElementById('gameArea').innerHTML = '<h2>🕹️ READY</h2><div class="pixel-team"><div class="pixel-char male"><div class="px-head" style="background:#4a3728"></div><div class="px-body" style="background:#3b82f6"></div><div class="px-legs"></div></div><div class="pixel-char female"><div class="px-head" style="background:#8b5e3c"></div><div class="px-body" style="background:#f472b6"></div><div class="px-legs" style="background:#7c3aed"></div></div><div class="pixel-char male"><div class="px-head" style="background:#2d1b0e"></div><div class="px-body" style="background:#10b981"></div><div class="px-legs"></div></div><div class="pixel-char male"><div class="px-head" style="background:#4a3728"></div><div class="px-body" style="background:#f59e0b"></div><div class="px-legs"></div></div><div class="pixel-char female"><div class="px-head" style="background:#a0522d"></div><div class="px-body" style="background:#ec4899"></div><div class="px-legs" style="background:#6366f1"></div></div><div class="pixel-char male"><div class="px-head" style="background:#1a1a2e"></div><div class="px-body" style="background:#6366f1"></div><div class="px-legs"></div></div><div class="pixel-char female"><div class="px-head" style="background:#8b4513"></div><div class="px-body" style="background:#f97316"></div><div class="px-legs" style="background:#a855f7"></div></div><div class="pixel-char male"><div class="px-head" style="background:#3d2b1f"></div><div class="px-body" style="background:#ef4444"></div><div class="px-legs"></div></div><div class="pixel-char male"><div class="px-head" style="background:#4a3728"></div><div class="px-body" style="background:#14b8a6"></div><div class="px-legs"></div></div><div class="pixel-char female"><div class="px-head" style="background:#a0522d"></div><div class="px-body" style="background:#a855f7"></div><div class="px-legs" style="background:#ec4899"></div></div><div class="pixel-char male"><div class="px-head" style="background:#2d1b0e"></div><div class="px-body" style="background:#0ea5e9"></div><div class="px-legs"></div></div><div class="pixel-char male"><div class="px-head" style="background:#4a3728"></div><div class="px-body" style="background:#8b5cf6"></div><div class="px-legs"></div></div><div class="pixel-char female"><div class="px-head" style="background:#8b5e3c"></div><div class="px-body" style="background:#fb923c"></div><div class="px-legs" style="background:#f472b6"></div></div></div><p class="game-desc" style="margin-top:20px">One team One vision, DX 오늘도 화이팅! 🔥</p>';
+  document.getElementById('gameArea').innerHTML = '<h2>🕹️ READY</h2><div class="pixel-team"><div class="pixel-char male"><div class="px-head" style="background:#4a3728"></div><div class="px-body" style="background:#3b82f6"></div><div class="px-legs"></div></div><div class="pixel-char female"><div class="px-head" style="background:#8b5e3c"></div><div class="px-body" style="background:#f472b6"></div><div class="px-legs" style="background:#7c3aed"></div></div><div class="pixel-char male"><div class="px-head" style="background:#2d1b0e"></div><div class="px-body" style="background:#10b981"></div><div class="px-legs"></div></div><div class="pixel-char male"><div class="px-head" style="background:#4a3728"></div><div class="px-body" style="background:#f59e0b"></div><div class="px-legs"></div></div><div class="pixel-char female"><div class="px-head" style="background:#a0522d"></div><div class="px-body" style="background:#ec4899"></div><div class="px-legs" style="background:#6366f1"></div></div><div class="pixel-char male"><div class="px-head" style="background:#1a1a2e"></div><div class="px-body" style="background:#6366f1"></div><div class="px-legs"></div></div><div class="pixel-char female"><div class="px-head" style="background:#8b4513"></div><div class="px-body" style="background:#f97316"></div><div class="px-legs" style="background:#a855f7"></div></div><div class="pixel-char male"><div class="px-head" style="background:#3d2b1f"></div><div class="px-body" style="background:#ef4444"></div><div class="px-legs"></div></div><div class="pixel-char male"><div class="px-head" style="background:#4a3728"></div><div class="px-body" style="background:#14b8a6"></div><div class="px-legs"></div></div><div class="pixel-char female"><div class="px-head" style="background:#a0522d"></div><div class="px-body" style="background:#a855f7"></div><div class="px-legs" style="background:#ec4899"></div></div><div class="pixel-char male"><div class="px-head" style="background:#2d1b0e"></div><div class="px-body" style="background:#0ea5e9"></div><div class="px-legs"></div></div><div class="pixel-char male"><div class="px-head" style="background:#4a3728"></div><div class="px-body" style="background:#8b5cf6"></div><div class="px-legs"></div></div><div class="pixel-char female"><div class="px-head" style="background:#8b5e3c"></div><div class="px-body" style="background:#fb923c"></div><div class="px-legs" style="background:#f472b6"></div></div></div><p class="game-desc" style="margin-top:20px;line-height:1.8">사무실 일상 속 소소한 즐거움!<br>일과 시간에 따라 오픈되는 게임을 클리어하고, 그날의 팀 MVP를 선정하는 게임입니다.<br><br><strong>One team One vision, DX 오늘도 화이팅! 🔥</strong></p><p style="font-size:0.7em;color:var(--text-muted);margin-top:12px;line-height:1.6;opacity:0.7">※ 데모 버전은 모든 스테이지를 언제든 들어갈 수 있게 열어두었습니다.<br>※ 우측 상단 타이틀 클릭시 Reset이 가능합니다.</p>';
 }
 
 /* === 타임테이블 렌더링 === */
@@ -982,22 +990,31 @@ function startMoleGame() {
   area.innerHTML = `
     <h2>🔨 STAGE 1: 업무 두더지 게임</h2>
     <p class="game-desc">나는 빈틈없는 DX 요원! 본격 업무 시작 전, 체크리스트 두더지를 때려 할일을 체크하세요!</p>
-    <div style="display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap;justify-content:center;width:100%">
+    <div style="display:flex;gap:24px;align-items:stretch;flex-wrap:wrap;justify-content:center;width:100%">
       <div>
         <div class="mole-timer" id="moleTimer">⏱️ 10.0</div>
         <div class="mole-grid" id="moleGrid">
-          ${[0,1,2,3,4,5,6,7,8].map(i=>`<div class="mole-hole" id="hole${i}"><div class="mole-char" id="mole${i}">📥</div></div>`).join('')}
+          ${[0,1,2,3,4,5,6,7,8].map(i=>`<div class="mole-hole" data-hole="${i}"><div class="mole-char" id="mole${i}">📥</div></div>`).join('')}
         </div>
         <p class="card-attempts" id="moleScore">잡은 두더지: 0/7</p>
       </div>
       <div class="mole-checklist" id="moleChecklist">
-        <p style="font-size:0.8em;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px">📋 오늘의 체크리스트</p>
+        <p style="font-size:0.85em;letter-spacing:1px;color:var(--primary-light);margin-bottom:12px;font-weight:700;padding-bottom:8px;border-bottom:2px solid var(--locked)">📋 오늘의 체크리스트</p>
         ${tasks.map((t,i)=>`<div class="mole-check-item" id="chk_${t.replace(/[\/\s]/g,'_')}">${icons[i]} ${t}</div>`).join('')}
       </div>
     </div>
     <button class="btn" id="moleStartBtn" onclick="moleGameStart()">▶ START</button>
   `;
-  window._mole = { tasks, icons, hit:[], total:7, appeared:0, timeLeft:10, interval:null, moleInterval:null, started:false, currentMole:-1 };
+  window._mole = { tasks, icons, hit:[], total:7, appeared:0, timeLeft:10, interval:null, moleInterval:null, started:false, currentMole:-1, moleActive:false };
+  // 이벤트 위임: 그리드 클릭 시 해당 구멍 번호로 hitMole 호출
+  document.getElementById('moleGrid').addEventListener('mousedown', function(e) {
+    const hole = e.target.closest('.mole-hole');
+    if(hole) hitMole(parseInt(hole.dataset.hole));
+  });
+  document.getElementById('moleGrid').addEventListener('touchstart', function(e) {
+    const hole = e.target.closest('.mole-hole');
+    if(hole) { e.preventDefault(); hitMole(parseInt(hole.dataset.hole)); }
+  });
 }
 
 function moleGameStart() {
@@ -1017,35 +1034,35 @@ function showNextMole() {
   const state = window._mole;
   if(state.appeared >= state.total) return;
   // 이전 두더지 숨김
-  if(state.currentMole>=0) document.getElementById('mole'+state.currentMole).classList.remove('mole-up');
-  // 랜덤 구멍 선택
-  const hole = Math.floor(Math.random()*9);
+  if(state.currentMole>=0) document.getElementById('mole'+state.currentMole).classList.remove('mole-up','mole-hit');
+  // 랜덤 구멍 선택 (이전과 다른 구멍)
+  let hole;
+  do { hole = Math.floor(Math.random()*9); } while(hole === state.currentMole && state.total > 1);
   state.currentMole = hole;
+  state.moleActive = true;
   state.appeared++;
   const moleEl = document.getElementById('mole'+hole);
-  // 해당 태스크의 아이콘으로 변경
   moleEl.textContent = state.icons[state.appeared-1];
+  moleEl.classList.remove('mole-hit');
   moleEl.classList.add('mole-up');
   moleEl.dataset.task = state.tasks[state.appeared-1];
-  // 구멍 전체 영역 클릭 가능
-  const holeEl = document.getElementById('hole'+hole);
-  holeEl.onclick = function() { hitMole(hole); };
-  // 짧은 시간 후 사라짐 (900ms)
+  // 짧은 시간 후 사라짐 (650ms)
   state.moleInterval = setTimeout(()=>{
+    state.moleActive = false;
     moleEl.classList.remove('mole-up');
     if(state.appeared < state.total) showNextMole();
     else setTimeout(()=>endMoleGame(),500);
-  }, 900);
+  }, 650);
 }
 
 function hitMole(hole) {
   const state = window._mole;
-  if(!state.started) return;
+  if(!state.started || !state.moleActive) return;
+  if(hole !== state.currentMole) return;
+  state.moleActive = false;
   const moleEl = document.getElementById('mole'+hole);
-  if(!moleEl.classList.contains('mole-up')) return;
   moleEl.classList.remove('mole-up');
   moleEl.classList.add('mole-hit');
-  setTimeout(()=>moleEl.classList.remove('mole-hit'),300);
   const task = moleEl.dataset.task;
   state.hit.push(task);
   // 체크리스트 업데이트
@@ -1054,7 +1071,7 @@ function hitMole(hole) {
   document.getElementById('moleScore').textContent = '잡은 두더지: '+state.hit.length+'/7';
   // 다음 두더지
   clearTimeout(state.moleInterval);
-  if(state.appeared < state.total) setTimeout(()=>showNextMole(),300);
+  if(state.appeared < state.total) setTimeout(()=>showNextMole(),250);
   else setTimeout(()=>endMoleGame(),500);
 }
 
@@ -1066,7 +1083,7 @@ function endMoleGame() {
   let score = Math.round((hitCount/7)*100);
   score = Math.max(20, Math.min(100, score));
   let msg = hitCount>=7?'완벽한 워밍업! 오늘 업무 준비 완료!':hitCount>=5?'좋은 시작! 빠릿빠릿!':hitCount>=3?'아침엔 좀 느릿해도 괜찮아요':'커피부터 한 잔 하고 와요...';
-  document.getElementById('gameArea').insertAdjacentHTML('beforeend',`<div class="game-result"><div class="score">${score}점</div><div class="message">${msg}</div></div>`);
+  document.getElementById('gameArea').insertAdjacentHTML('beforeend',`<div class="game-result"><div class="score">${score}점</div><div class="message">${msg}<br><span style="font-size:0.8em;color:var(--yellow);margin-top:8px;display:inline-block">체크리스트를 확인하며 오늘도 빈틈없는 DX 팀원으로서 힘찬 하루를 시작해봅시다!</span></div></div>`);
   saveResult(9, score);
 }
 
@@ -1103,7 +1120,7 @@ function startTempGame() {
       <button class="btn" id="tempBtn" onclick="tempAction()">▶ START</button>
     </div>
   `;
-  window._temp = { moving:false, stopped:false, position:50, direction:1, interval:null, speed:1.5 };
+  window._temp = { moving:false, stopped:false, position:50, direction:1, interval:null, speed:1.8 };
 }
 
 function tempAction() {
@@ -1131,11 +1148,11 @@ function tempAction() {
     const temp = 18 + (state.position/100)*10;
     const tempRound = Math.round(temp);
     let score, msg;
-    if(temp>=23&&temp<=24){score=100;msg='DX 사무실 평화 협정 체결!';}
+    if(tempRound>=23&&tempRound<=24){score=100;msg='DX 사무실 평화 협정 체결!';}
     else if(tempRound===22||tempRound===25){score=85;msg='둘 다 이 정도면 참을 만합니다.';}
     else if(tempRound===21||tempRound===26){score=70;msg='한쪽 눈치가 조금 보입니다.';}
     else if(tempRound===20||tempRound===27){score=50;msg=tempRound<=20?'세웅 자리 이탈 위기!':'승혁 자리 이탈 위기!';}
-    else{score=20;msg=temp<=20?'세웅은 버틸 수 없어..!':'승혁은 버틸 수 없어..!';}
+    else{score=20;msg=tempRound<=19?'세웅은 버틸 수 없어..!':'승혁은 버틸 수 없어..!';}
     btn.style.display='none';
     document.getElementById('tempHint').textContent = '멈춘 온도: '+temp.toFixed(1)+'℃';
     document.getElementById('gameArea').insertAdjacentHTML('beforeend',`<div class="game-result"><div class="score">${score}점</div><div class="message">${msg}<br><span style="font-size:0.8em;color:var(--text-muted)">사무실 평화도: ${score}%</span></div></div>`);
@@ -1229,27 +1246,27 @@ function typingSubmit() {
    게임 3: 카드 짝맞추기 (13시) - 스톱워치 속도 경쟁
    ========================================== */
 function startCardGame() {
-  const fruits = ['🍎','🍊','🍋','🍇','🍓','🍑'];
-  let cards = [...fruits,...fruits];
+  const images = ['1.png','2.jpg','3.jpg','4.jpg','5.jpg','6.jpg','7.jpg','8.png','9.png'];
+  let cards = [...images,...images]; // 9쌍 18장
   for(let i=cards.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]];}
   const area = document.getElementById('gameArea');
   area.innerHTML = `
-    <h2>🃏 STAGE 3: 카드 짝맞추기</h2>
-    <p class="game-desc">같은 과일 카드를 빠르게 찾아 짝을 맞추세요! 빠를수록 고득점!</p>
+    <h2>🃏 STAGE 4: 카드 짝맞추기</h2>
+    <p class="game-desc">같은 팀원 카드를 빠르게 찾아 짝을 맞추세요! 빠를수록 고득점!</p>
     <div class="card-timer" id="cardTimer">⏱️ 0.0초</div>
     <div class="card-grid" id="cardGrid"></div>
-    <div class="card-attempts" id="cardAttempts">시도: 0회 | 매칭: 0/6</div>
+    <div class="card-attempts" id="cardAttempts">시도: 0회 | 매칭: 0/9</div>
     <button class="btn" id="cardStartBtn" onclick="cardGameStart()">▶ START</button>
   `;
   const grid = document.getElementById('cardGrid');
-  cards.forEach((fruit,i) => {
+  cards.forEach((img,i) => {
     const card = document.createElement('div');
-    card.className = 'memory-card'; card.dataset.index = i; card.dataset.fruit = fruit;
-    card.innerHTML = `<div class="card-front">${fruit}</div><div class="card-back">?</div>`;
+    card.className = 'memory-card'; card.dataset.index = i; card.dataset.fruit = img;
+    card.innerHTML = `<div class="card-front"><img src="${img}" alt=""></div><div class="card-back">?</div>`;
     card.addEventListener('click', ()=>flipCard(i));
     grid.appendChild(card);
   });
-  window._card = { cards, flipped:[], matched:[], attempts:0, matches:0, startTime:null, interval:null, locked:true, started:false };
+  window._card = { cards, flipped:[], matched:[], attempts:0, matches:0, startTime:null, interval:null, locked:true, started:false, totalPairs:9 };
 }
 
 function cardGameStart() {
@@ -1277,7 +1294,7 @@ function flipCard(index) {
       allCards[i1].classList.add('flipped','matched');
       allCards[i2].classList.add('flipped','matched');
       state.flipped=[]; state.locked=false; updateCardStatus();
-      if(state.matches===6){clearInterval(state.interval);endCardGame();}
+      if(state.matches===9){clearInterval(state.interval);endCardGame();}
     } else {
       setTimeout(()=>{
         document.querySelectorAll('.memory-card')[i1].classList.remove('flipped');
@@ -1289,21 +1306,21 @@ function flipCard(index) {
   }
 }
 function updateCardStatus(){
-  document.getElementById('cardAttempts').textContent=`시도: ${window._card.attempts}회 | 매칭: ${window._card.matches}/6`;
+  document.getElementById('cardAttempts').textContent=`시도: ${window._card.attempts}회 | 매칭: ${window._card.matches}/9`;
 }
 function endCardGame(){
   const state=window._card;
   const elapsed = (Date.now()-state.startTime)/1000;
-  // 시간 기반 점수 계산
+  // 시간 기반 점수 계산 (9쌍 18장)
   let score, msg;
-  if(elapsed<=10){score=100;msg='기억력 괴물!';}
-  else if(elapsed<=13){score=90;msg='기억력 괴물!';}
-  else if(elapsed<=16){score=80;msg='집중력 최고조!';}
-  else if(elapsed<=19){score=70;msg='집중력 최고조!';}
-  else if(elapsed<=22){score=60;msg='오후 업무 복귀 가능!';}
-  else if(elapsed<=25){score=50;msg='오후 업무 복귀 가능!';}
-  else if(elapsed<=28){score=40;msg='천천히지만 확실하게!';}
-  else if(elapsed<=31){score=30;msg='천천히지만 확실하게!';}
+  if(elapsed<=20){score=100;msg='기억력 괴물!';}
+  else if(elapsed<=25){score=90;msg='기억력 괴물!';}
+  else if(elapsed<=30){score=80;msg='집중력 최고조!';}
+  else if(elapsed<=35){score=70;msg='집중력 최고조!';}
+  else if(elapsed<=40){score=60;msg='오후 업무 복귀 가능!';}
+  else if(elapsed<=45){score=50;msg='오후 업무 복귀 가능!';}
+  else if(elapsed<=50){score=40;msg='천천히지만 확실하게!';}
+  else if(elapsed<=55){score=30;msg='천천히지만 확실하게!';}
   else{score=20;msg='괜찮아요, 워밍업이니까요.';}
   document.getElementById('gameArea').insertAdjacentHTML('beforeend',`<div class="game-result"><div class="score">${score}점</div><div class="message">${msg}<br><span style="font-size:0.8em;color:var(--text-muted)">⏱️ ${elapsed.toFixed(1)}초 | 시도 횟수: ${state.attempts}회</span></div></div>`);
   saveResult(13,score);
@@ -1461,14 +1478,16 @@ function snackGameStart() {
   const state = window._snack;
   const orderItems = [
     {name:'두바이 초코과자',icon:'🍫',type:'order'},{name:'새콤한 지렁이 젤리',icon:'🍬',type:'order'},
-    {name:'다이어트 단백칩',icon:'💪',type:'order'},{name:'멈출 수 없는 어포튀각',icon:'🐟',type:'order'},
-    {name:'건강한 견과류',icon:'🥜',type:'order'},{name:'제로콜라',icon:'🥤',type:'order'},
-    {name:'반숙란',icon:'🥚',type:'order'}
+    {name:'저칼로리 단백칩',icon:'💪',type:'order'},{name:'멈출 수 없는 어포튀각',icon:'🐟',type:'order'},
+    {name:'건강한 견과류',icon:'🥜',type:'order'},{name:'다이어트 제로콜라',icon:'🥤',type:'order'},
+    {name:'반숙란',icon:'🥚',type:'order'},{name:'영화관 뺨치는 팝콘',icon:'🍿',type:'order'},
+    {name:'고칼로리 단백질바',icon:'🏋️',type:'order'}
   ];
   const cleanItems = [
     {name:'썩은 계란',icon:'🤢',type:'clean'},{name:'이름 없는 샐러드',icon:'🥗',type:'clean'},
     {name:'정체불명의 검은 봉지',icon:'🗑️',type:'clean'},{name:'오래된 두유',icon:'🥛',type:'clean'},
-    {name:'먹다 남은 케이크',icon:'🍰',type:'clean'}
+    {name:'먹다 남은 케이크',icon:'🍰',type:'clean'},{name:'주인없는 음료',icon:'🧃',type:'clean'},
+    {name:'곰팡이 반찬통',icon:'🦠',type:'clean'},{name:'탄산 빠진 콜라',icon:'🫗',type:'clean'}
   ];
   // 주문 5개 + 청소 5개 = 10개 랜덤
   const shuffle = arr => arr.sort(()=>Math.random()-0.5);
