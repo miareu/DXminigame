@@ -8,6 +8,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
 <style>
+/* === 커스텀 폰트 === */
+@font-face {
+  font-family: 'Keriskedu';
+  src: url('KERISKEDU_B.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+}
 /* === 기본 리셋 및 전역 스타일 === */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
@@ -91,8 +98,8 @@ body::before {
   margin-bottom: -4px;
 }
 .modal-logo-text {
-  font-family: 'Jua', sans-serif;
-  font-size: 3.2em; font-weight: 400; letter-spacing: 4px;
+  font-family: 'Keriskedu', 'Jua', sans-serif;
+  font-size: 3.2em; font-weight: 700; letter-spacing: 4px;
   color: #fff;
   background: linear-gradient(180deg, #67e8f9 0%, #a5f3fc 30%, #ffffff 50%, #f0abfc 70%, #d946ef 100%);
   -webkit-background-clip: text;
@@ -101,8 +108,8 @@ body::before {
   -webkit-text-stroke: 1.5px rgba(30,10,60,0.5);
 }
 .modal-logo-main {
-  font-family: 'Jua', sans-serif;
-  font-size: 3.2em; letter-spacing: 4px; margin-top: -4px; font-weight: 400;
+  font-family: 'Keriskedu', 'Jua', sans-serif;
+  font-size: 3.2em; letter-spacing: 4px; margin-top: -4px; font-weight: 700;
   white-space: nowrap;
   background: linear-gradient(180deg, #5eead4 0%, #a7f3d0 20%, #ffffff 45%, #f9a8d4 65%, #ec4899 85%, #be185d 100%);
   -webkit-background-clip: text;
@@ -156,8 +163,8 @@ body::before {
   cursor: pointer; user-select: none; position: relative;
 }
 .arcade-logo-text {
-  font-family: 'Jua', sans-serif;
-  font-size: 2.4em; font-weight: 400; letter-spacing: -1px;
+  font-family: 'Keriskedu', 'Jua', sans-serif;
+  font-size: 2.4em; font-weight: 700; letter-spacing: -1px;
   background: linear-gradient(135deg, #c084fc 0%, #f472b6 40%, #38bdf8 80%, #c084fc 100%);
   background-size: 200% 200%;
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
@@ -830,6 +837,16 @@ body::before {
 }
 .news-skip:hover { opacity: 1; color: var(--primary-light); }
 
+/* Ready 화면 애니메이션 */
+@keyframes readyPulse {
+  0%,100% { transform: scale(1); filter: drop-shadow(0 0 8px rgba(192,132,252,0.4)); }
+  50% { transform: scale(1.05); filter: drop-shadow(0 0 16px rgba(192,132,252,0.7)); }
+}
+@keyframes readyBounce {
+  0%,100% { transform: translateX(0); }
+  50% { transform: translateX(-4px); }
+}
+
 /* === 두더지: 스파크 이펙트 === */
 .mole-spark {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
@@ -896,7 +913,7 @@ body::before {
       <div class="modal-logo-text">디엑스!</div>
       <div class="modal-logo-text modal-logo-main">오늘도 출근 클리어</div>
     </div>
-    <p style="font-size:0.72em;color:var(--text-muted);margin-top:16px;line-height:1.6">오늘도 열일하는 DX팀!<br>하루를 좀더 즐겁게 만들 미니게임과 함께라면<br>어느새 퇴근이 기다릴거에요 💪</p>
+    <p style="font-size:0.9em;color:var(--text-muted);margin-top:16px;line-height:1.6">오늘도 열일하는 DX팀!<br>일과 시간에 따라 오픈되는 게임을 클리어하고<br>오늘의 MVP가 되어보세요 🔥</p>
     <input type="text" id="nameInput" maxlength="10" placeholder="이름 입력 (최대 10자)">
     <button class="btn" onclick="submitName()" style="margin-top:20px;width:100%">▶ START</button>
   </div>
@@ -1031,7 +1048,7 @@ function startNewsIntro() {
     // 구분선 + 아웃트로
     ()=>{
       container.innerHTML += '<div class="news-divider" style="animation-delay:0s"></div>';
-      container.innerHTML += '<div class="news-outro" style="animation:newsFadeIn 0.5s ease forwards"><p>이 모든 것을 해결할 방법은?</p><button class="btn" onclick="showReadyScreen()">▶ GAME START</button></div>';
+      container.innerHTML += '<div class="news-outro" style="animation:newsFadeIn 0.5s ease forwards"><p>이 모든 것을 해결할 방법은?</p><button class="btn" onclick="startFirstGame()">▶ GAME START</button><p style="font-size:0.7em;color:var(--text-muted);margin-top:16px;line-height:1.6;opacity:0.7">※ 데모 버전은 모든 스테이지를 언제든 들어갈 수 있게 열어두었습니다.<br>※ 좌측 상단 타이틀 클릭시 Reset이 가능합니다.</p></div>';
     }
   ];
   const delays = [0, 800, 1400, 2400, 3400, 4400, 5400];
@@ -1041,16 +1058,25 @@ function startNewsIntro() {
 }
 
 function skipNews() {
-  showReadyScreen();
+  startFirstGame();
+}
+
+function startFirstGame() {
+  selectedHour = 9;
+  renderTimetable();
+  const area = document.getElementById('gameArea');
+  area.style.opacity = '0';
+  area.style.transform = 'translateY(8px)';
+  setTimeout(() => {
+    startGame(9);
+    area.classList.add('game-screen-enter');
+    area.style.opacity = ''; area.style.transform = '';
+    setTimeout(() => area.classList.remove('game-screen-enter'), 400);
+  }, 150);
 }
 
 function showReadyScreen() {
-  const area = document.getElementById('gameArea');
-  area.innerHTML = `
-    <h2>🕹️ READY</h2>
-    <p class="game-desc" style="margin-top:12px;line-height:1.8">사무실 일상 속 소소한 즐거움!<br>일과 시간에 따라 오픈되는 게임을 클리어하고, 그날의 팀 MVP를 선정하는 게임입니다.<br><br><strong>One team One vision, DX 오늘도 화이팅! 🔥</strong></p>
-    <p style="font-size:0.7em;color:var(--text-muted);margin-top:12px;line-height:1.6;opacity:0.7">※ 데모 버전은 모든 스테이지를 언제든 들어갈 수 있게 열어두었습니다.<br>※ 좌측 상단 타이틀 클릭시 Reset이 가능합니다.</p>
-  `;
+  startFirstGame();
 }
 
 function updateHeader() {
