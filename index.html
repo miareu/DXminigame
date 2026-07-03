@@ -312,6 +312,7 @@ body::before {
   box-shadow: inset 0 0 30px rgba(0,0,0,0.5), inset 0 0 80px rgba(147,51,234,0.05);
   position: relative; overflow: hidden; overflow-y: auto;
   flex: 1;
+  transition: opacity 0.15s ease, transform 0.15s ease;
 }
 /* CRT 스캔라인 효과 */
 .game-screen::after {
@@ -771,6 +772,119 @@ body::before {
 .card-timer { font-size: 1.4em; font-weight: 700; color: var(--yellow); margin: 12px 0; }
 .card-attempts { font-size: 0.85em; color: var(--text-muted); }
 @keyframes slideIn { from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)} }
+
+/* 게임 전환 애니메이션 */
+@keyframes screenFadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.game-screen-enter { animation: screenFadeIn 0.35s ease-out; }
+
+/* 점수 카운트업 애니메이션 */
+@keyframes scorePop {
+  0% { transform: scale(0.5); opacity: 0; }
+  60% { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.score-animate { animation: scorePop 0.6s cubic-bezier(0.34,1.56,0.64,1); }
+@keyframes stageClear {
+  0% { opacity: 0; transform: translateY(20px) scale(0.8); }
+  50% { transform: translateY(-4px) scale(1.05); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.game-result { animation: stageClear 0.5s ease-out; }
+
+/* === 뉴스 인트로 === */
+.news-intro { width: 100%; max-width: 500px; text-align: left; }
+.news-title {
+  font-family: 'Jua', sans-serif;
+  font-size: 1.6em; color: var(--yellow); text-align: center;
+  text-shadow: 0 0 12px rgba(251,191,36,0.5);
+  opacity: 0; animation: newsFadeIn 0.6s ease forwards;
+}
+.news-divider {
+  height: 2px; background: linear-gradient(90deg, transparent, var(--primary-light), transparent);
+  margin: 12px 0; opacity: 0; animation: newsFadeIn 0.4s ease 0.8s forwards;
+}
+.news-line {
+  font-size: 0.88em; line-height: 1.8; color: var(--text);
+  opacity: 0; white-space: nowrap; overflow: hidden;
+  border-right: 2px solid var(--primary-light);
+  animation: newsType 0.6s steps(30) forwards, newsBlink 0.6s step-end forwards;
+}
+.news-line .tag {
+  color: var(--yellow); font-weight: 700; font-size: 0.85em;
+  margin-right: 6px;
+}
+@keyframes newsFadeIn { to { opacity: 1; } }
+@keyframes newsType { from { width: 0; opacity: 1; } to { width: 100%; opacity: 1; } }
+@keyframes newsBlink { from { border-color: var(--primary-light); } to { border-color: transparent; } }
+.news-outro {
+  text-align: center; margin-top: 20px; opacity: 0;
+}
+.news-outro p { color: var(--text-muted); font-size: 0.9em; margin-bottom: 12px; }
+.news-skip {
+  position: absolute; bottom: 12px; right: 16px;
+  font-size: 0.7em; color: var(--text-muted); cursor: pointer;
+  opacity: 0.6; transition: opacity 0.2s;
+}
+.news-skip:hover { opacity: 1; color: var(--primary-light); }
+
+/* === 두더지: 스파크 이펙트 === */
+.mole-spark {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  pointer-events: none; z-index: 10;
+}
+.mole-spark::before, .mole-spark::after {
+  content: '✦'; position: absolute; font-size: 1.2em; color: var(--yellow);
+  animation: sparkBurst 0.5s ease-out forwards;
+}
+.mole-spark::before { animation-delay: 0s; }
+.mole-spark::after { content: '✧'; animation-delay: 0.1s; }
+@keyframes sparkBurst {
+  0% { opacity: 1; transform: translate(0,0) scale(1); }
+  100% { opacity: 0; transform: translate(var(--sx,10px), var(--sy,-15px)) scale(0.3); }
+}
+.spark-1::before { --sx: -12px; --sy: -18px; }
+.spark-1::after { --sx: 14px; --sy: -12px; }
+.spark-2::before { --sx: 10px; --sy: 14px; }
+.spark-2::after { --sx: -14px; --sy: 10px; }
+
+/* === 온도: PERFECT 구간 글로우 === */
+.temp-gauge.perfect-glow {
+  box-shadow: 0 0 20px rgba(251,191,36,0.6), 0 0 40px rgba(251,191,36,0.3);
+  transition: box-shadow 0.3s ease;
+}
+.temp-perfect-zone.glowing {
+  box-shadow: 0 0 16px rgba(251,191,36,0.8), 0 0 30px rgba(251,191,36,0.4);
+  border-color: #fde047;
+}
+
+/* === 카드: 매칭 성공 효과 === */
+.memory-card.match-success {
+  animation: cardMatchPop 0.5s ease;
+}
+@keyframes cardMatchPop {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.15) translateY(-6px); box-shadow: 0 0 20px rgba(52,211,153,0.7); }
+  100% { transform: scale(1); }
+}
+
+/* === 간식창고: 아이템 날아가기 === */
+.snack-card.fly-left {
+  animation: flyLeft 0.4s ease-in forwards;
+}
+.snack-card.fly-right {
+  animation: flyRight 0.4s ease-in forwards;
+}
+@keyframes flyLeft {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: translateX(-120px) scale(0.5) rotate(-15deg); opacity: 0; }
+}
+@keyframes flyRight {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: translateX(120px) scale(0.5) rotate(15deg); opacity: 0; }
+}
 </style>
 </head>
 <body>
@@ -819,24 +933,8 @@ body::before {
   <div class="arcade-cabinet">
     <div class="arcade-frame">
       <div class="game-screen" id="gameArea">
-        <h2>🕹️ READY</h2>
-        <div class="pixel-team">
-          <div class="pixel-char male"><div class="px-head" style="background:#4a3728"></div><div class="px-body" style="background:#3b82f6"></div><div class="px-legs"></div></div>
-          <div class="pixel-char female"><div class="px-head" style="background:#8b5e3c"></div><div class="px-body" style="background:#f472b6"></div><div class="px-legs" style="background:#7c3aed"></div></div>
-          <div class="pixel-char male"><div class="px-head" style="background:#2d1b0e"></div><div class="px-body" style="background:#10b981"></div><div class="px-legs"></div></div>
-          <div class="pixel-char male"><div class="px-head" style="background:#4a3728"></div><div class="px-body" style="background:#f59e0b"></div><div class="px-legs"></div></div>
-          <div class="pixel-char female"><div class="px-head" style="background:#a0522d"></div><div class="px-body" style="background:#ec4899"></div><div class="px-legs" style="background:#6366f1"></div></div>
-          <div class="pixel-char male"><div class="px-head" style="background:#1a1a2e"></div><div class="px-body" style="background:#6366f1"></div><div class="px-legs"></div></div>
-          <div class="pixel-char female"><div class="px-head" style="background:#8b4513"></div><div class="px-body" style="background:#f97316"></div><div class="px-legs" style="background:#a855f7"></div></div>
-          <div class="pixel-char male"><div class="px-head" style="background:#3d2b1f"></div><div class="px-body" style="background:#ef4444"></div><div class="px-legs"></div></div>
-          <div class="pixel-char male"><div class="px-head" style="background:#4a3728"></div><div class="px-body" style="background:#14b8a6"></div><div class="px-legs"></div></div>
-          <div class="pixel-char female"><div class="px-head" style="background:#a0522d"></div><div class="px-body" style="background:#a855f7"></div><div class="px-legs" style="background:#ec4899"></div></div>
-          <div class="pixel-char male"><div class="px-head" style="background:#2d1b0e"></div><div class="px-body" style="background:#0ea5e9"></div><div class="px-legs"></div></div>
-          <div class="pixel-char male"><div class="px-head" style="background:#4a3728"></div><div class="px-body" style="background:#8b5cf6"></div><div class="px-legs"></div></div>
-          <div class="pixel-char female"><div class="px-head" style="background:#8b5e3c"></div><div class="px-body" style="background:#fb923c"></div><div class="px-legs" style="background:#f472b6"></div></div>
-        </div>
-        <p class="game-desc" style="margin-top:20px;line-height:1.8">사무실 일상 속 소소한 즐거움!<br>일과 시간에 따라 오픈되는 게임을 클리어하고, 그날의 팀 MVP를 선정하는 게임입니다.<br><br><strong>One team One vision, DX 오늘도 화이팅! 🔥</strong></p>
-        <p style="font-size:0.7em;color:var(--text-muted);margin-top:12px;line-height:1.6;opacity:0.7">※ 데모 버전은 모든 스테이지를 언제든 들어갈 수 있게 열어두었습니다.<br>※ 우측 상단 타이틀 클릭시 Reset이 가능합니다.</p>
+        <div class="news-intro" id="newsIntro"></div>
+        <span class="news-skip" onclick="skipNews()">SKIP ▶</span>
       </div>
       <div class="arcade-controls">
         <div class="arcade-btn-deco" style="background:linear-gradient(135deg,#c084fc,#9333ea)"></div>
@@ -880,6 +978,7 @@ function init() {
   if (userName) {
     document.getElementById('nameModal').classList.add('hidden');
     updateHeader();
+    startNewsIntro();
   }
   renderTimetable();
 }
@@ -892,9 +991,67 @@ function submitName() {
   userName = name;
   localStorage.setItem('dx_username', name);
   document.getElementById('nameModal').classList.add('hidden');
-  updateHeader(); renderTimetable(); showDefaultContent();
+  updateHeader(); renderTimetable();
+  startNewsIntro();
 }
 document.getElementById('nameInput').addEventListener('keydown', e => { if (e.key==='Enter') submitName(); });
+
+/* === 뉴스 인트로 === */
+let newsTimer = null;
+const NEWS_HEADLINES = [
+  "🌡️ 사무실 온도 분쟁 3일째... 세웅 패딩 반입, 승혁 선풍기 요청",
+  "🍪 간식 재고 부족 심각. 성현 긴급 발주 예정",
+  "🧹 냉장고에서 미확인 물체 발견. 재환 출동 요청",
+  "⌨️ 누군가의 타자 소리가 사무실을 지배하고 있습니다",
+  "🔨 오전 업무 시작 전, 체크리스트 미확인자 다수 발생",
+  "🍽️ 오늘 저녁 메뉴 투표, 치킨 vs 삼겹살 팽팽한 접전",
+  "🃏 점심 후 졸음 퇴치를 위한 비상 게임 가동",
+  "👁️ 모니터 앞 4시간째... 눈 스트레칭 미실시자 경고"
+];
+
+function startNewsIntro() {
+  const area = document.getElementById('gameArea');
+  area.innerHTML = '<div class="news-intro" id="newsIntro"></div><span class="news-skip" onclick="skipNews()">SKIP ▶</span>';
+  const container = document.getElementById('newsIntro');
+  // 랜덤 4개 선택
+  const shuffled = [...NEWS_HEADLINES].sort(()=>Math.random()-0.5);
+  const selected = shuffled.slice(0,4);
+  const tags = ['[속보]','[단독]','[긴급]','[현장]'];
+  let step = 0;
+  const steps = [
+    // 타이틀
+    ()=>{ container.innerHTML = '<div class="news-title">📰 DX DAILY NEWS</div>'; },
+    // 구분선
+    ()=>{ container.innerHTML += '<div class="news-divider"></div>'; },
+    // 헤드라인 1~4
+    ()=>{ container.innerHTML += `<div class="news-line" style="animation-delay:0s"><span class="tag">${tags[0]}</span>${selected[0]}</div>`; },
+    ()=>{ container.innerHTML += `<div class="news-line" style="animation-delay:0s"><span class="tag">${tags[1]}</span>${selected[1]}</div>`; },
+    ()=>{ container.innerHTML += `<div class="news-line" style="animation-delay:0s"><span class="tag">${tags[2]}</span>${selected[2]}</div>`; },
+    ()=>{ container.innerHTML += `<div class="news-line" style="animation-delay:0s"><span class="tag">${tags[3]}</span>${selected[3]}</div>`; },
+    // 구분선 + 아웃트로
+    ()=>{
+      container.innerHTML += '<div class="news-divider" style="animation-delay:0s"></div>';
+      container.innerHTML += '<div class="news-outro" style="animation:newsFadeIn 0.5s ease forwards"><p>이 모든 것을 해결할 방법은?</p><button class="btn" onclick="showReadyScreen()">▶ GAME START</button></div>';
+    }
+  ];
+  const delays = [0, 800, 1400, 2400, 3400, 4400, 5400];
+  delays.forEach((d,i) => {
+    setTimeout(()=>{ if(document.getElementById('newsIntro')) steps[i](); }, d);
+  });
+}
+
+function skipNews() {
+  showReadyScreen();
+}
+
+function showReadyScreen() {
+  const area = document.getElementById('gameArea');
+  area.innerHTML = `
+    <h2>🕹️ READY</h2>
+    <p class="game-desc" style="margin-top:12px;line-height:1.8">사무실 일상 속 소소한 즐거움!<br>일과 시간에 따라 오픈되는 게임을 클리어하고, 그날의 팀 MVP를 선정하는 게임입니다.<br><br><strong>One team One vision, DX 오늘도 화이팅! 🔥</strong></p>
+    <p style="font-size:0.7em;color:var(--text-muted);margin-top:12px;line-height:1.6;opacity:0.7">※ 데모 버전은 모든 스테이지를 언제든 들어갈 수 있게 열어두었습니다.<br>※ 좌측 상단 타이틀 클릭시 Reset이 가능합니다.</p>
+  `;
+}
 
 function updateHeader() {
   document.getElementById('statUser').textContent = '👤 ' + userName;
@@ -906,6 +1063,23 @@ function saveResult(hour, score) {
   gameResults[hour] = score;
   localStorage.setItem('dx_results', JSON.stringify(gameResults));
   updateHeader(); renderTimetable();
+  // 점수 카운트업 애니메이션 적용
+  setTimeout(() => {
+    const scoreEls = document.querySelectorAll('.game-result .score');
+    const lastScore = scoreEls[scoreEls.length - 1];
+    if (lastScore) {
+      lastScore.classList.add('score-animate');
+      // 카운트업
+      const target = score;
+      let current = 0;
+      const step = Math.ceil(target / 20);
+      const counter = setInterval(() => {
+        current += step;
+        if (current >= target) { current = target; clearInterval(counter); }
+        lastScore.textContent = current + '점';
+      }, 30);
+    }
+  }, 50);
 }
 
 function resetApp() {
@@ -916,7 +1090,7 @@ function resetApp() {
   document.getElementById('nameModal').classList.remove('hidden');
   document.getElementById('nameInput').value = '';
   updateHeader(); renderTimetable();
-  document.getElementById('gameArea').innerHTML = '<h2>🕹️ READY</h2><div class="pixel-team"><div class="pixel-char male"><div class="px-head" style="background:#4a3728"></div><div class="px-body" style="background:#3b82f6"></div><div class="px-legs"></div></div><div class="pixel-char female"><div class="px-head" style="background:#8b5e3c"></div><div class="px-body" style="background:#f472b6"></div><div class="px-legs" style="background:#7c3aed"></div></div><div class="pixel-char male"><div class="px-head" style="background:#2d1b0e"></div><div class="px-body" style="background:#10b981"></div><div class="px-legs"></div></div><div class="pixel-char male"><div class="px-head" style="background:#4a3728"></div><div class="px-body" style="background:#f59e0b"></div><div class="px-legs"></div></div><div class="pixel-char female"><div class="px-head" style="background:#a0522d"></div><div class="px-body" style="background:#ec4899"></div><div class="px-legs" style="background:#6366f1"></div></div><div class="pixel-char male"><div class="px-head" style="background:#1a1a2e"></div><div class="px-body" style="background:#6366f1"></div><div class="px-legs"></div></div><div class="pixel-char female"><div class="px-head" style="background:#8b4513"></div><div class="px-body" style="background:#f97316"></div><div class="px-legs" style="background:#a855f7"></div></div><div class="pixel-char male"><div class="px-head" style="background:#3d2b1f"></div><div class="px-body" style="background:#ef4444"></div><div class="px-legs"></div></div><div class="pixel-char male"><div class="px-head" style="background:#4a3728"></div><div class="px-body" style="background:#14b8a6"></div><div class="px-legs"></div></div><div class="pixel-char female"><div class="px-head" style="background:#a0522d"></div><div class="px-body" style="background:#a855f7"></div><div class="px-legs" style="background:#ec4899"></div></div><div class="pixel-char male"><div class="px-head" style="background:#2d1b0e"></div><div class="px-body" style="background:#0ea5e9"></div><div class="px-legs"></div></div><div class="pixel-char male"><div class="px-head" style="background:#4a3728"></div><div class="px-body" style="background:#8b5cf6"></div><div class="px-legs"></div></div><div class="pixel-char female"><div class="px-head" style="background:#8b5e3c"></div><div class="px-body" style="background:#fb923c"></div><div class="px-legs" style="background:#f472b6"></div></div></div><p class="game-desc" style="margin-top:20px;line-height:1.8">사무실 일상 속 소소한 즐거움!<br>일과 시간에 따라 오픈되는 게임을 클리어하고, 그날의 팀 MVP를 선정하는 게임입니다.<br><br><strong>One team One vision, DX 오늘도 화이팅! 🔥</strong></p><p style="font-size:0.7em;color:var(--text-muted);margin-top:12px;line-height:1.6;opacity:0.7">※ 데모 버전은 모든 스테이지를 언제든 들어갈 수 있게 열어두었습니다.<br>※ 우측 상단 타이틀 클릭시 Reset이 가능합니다.</p>';
+  document.getElementById('gameArea').innerHTML = '<div class="news-intro" id="newsIntro"></div><span class="news-skip" onclick="skipNews()">SKIP ▶</span>';
 }
 
 /* === 타임테이블 렌더링 === */
@@ -951,10 +1125,19 @@ function renderTimetable() {
 function openSlot(item) {
   selectedHour = item.hour;
   renderTimetable();
-  if (item.type === 'GAME') {
-    startGame(item.hour);
-  } else if (item.type === 'BREAK') { showBreak(item.hour); }
-  else if (item.type === 'RESULT') { showResult(); }
+  const area = document.getElementById('gameArea');
+  // 페이드 아웃 → 콘텐츠 변경 → 페이드 인
+  area.style.opacity = '0';
+  area.style.transform = 'translateY(8px)';
+  setTimeout(() => {
+    if (item.type === 'GAME') {
+      startGame(item.hour);
+    } else if (item.type === 'BREAK') { showBreak(item.hour); }
+    else if (item.type === 'RESULT') { showResult(); }
+    area.classList.add('game-screen-enter');
+    area.style.opacity = ''; area.style.transform = '';
+    setTimeout(() => area.classList.remove('game-screen-enter'), 400);
+  }, 150);
 }
 
 function showDefaultContent() {
@@ -1067,6 +1250,13 @@ function hitMole(hole) {
   const moleEl = document.getElementById('mole'+hole);
   moleEl.classList.remove('mole-up');
   moleEl.classList.add('mole-hit');
+  // 스파크 이펙트
+  const holeEl = moleEl.parentElement;
+  const sparkClass = Math.random()>0.5?'spark-1':'spark-2';
+  const spark = document.createElement('div');
+  spark.className = 'mole-spark '+sparkClass;
+  holeEl.appendChild(spark);
+  setTimeout(()=>spark.remove(),600);
   const task = moleEl.dataset.task;
   state.hit.push(task);
   // 체크리스트 업데이트
@@ -1143,6 +1333,11 @@ function tempAction() {
       document.getElementById('tempNeedle').style.left = state.position+'%';
       const temp = 18 + (state.position/100)*10;
       document.getElementById('tempDisplay').textContent = temp.toFixed(1)+'℃';
+      // PERFECT 구간 글로우
+      const gauge = document.querySelector('.temp-gauge');
+      const zone = document.querySelector('.temp-perfect-zone');
+      if(temp>=22.5&&temp<=23.5){ gauge.classList.add('perfect-glow'); zone.classList.add('glowing'); }
+      else { gauge.classList.remove('perfect-glow'); zone.classList.remove('glowing'); }
       updateTempChars(temp);
     }, 20);
   } else if(state.moving) {
@@ -1300,8 +1495,9 @@ function flipCard(index) {
     if(state.cards[i1]===state.cards[i2]){
       state.matched.push(i1,i2); state.matches++;
       const allCards = document.querySelectorAll('.memory-card');
-      allCards[i1].classList.add('flipped','matched');
-      allCards[i2].classList.add('flipped','matched');
+      allCards[i1].classList.add('flipped','matched','match-success');
+      allCards[i2].classList.add('flipped','matched','match-success');
+      setTimeout(()=>{ allCards[i1].classList.remove('match-success'); allCards[i2].classList.remove('match-success'); },600);
       state.flipped=[]; state.locked=false; updateCardStatus();
       if(state.matches===9){clearInterval(state.interval);endCardGame();}
     } else {
@@ -1553,15 +1749,19 @@ function snackChoice(choice) {
     if(choice==='order') document.getElementById('snkLeftBubble').textContent='이건 아닌데..😅';
     else document.getElementById('snkRightBubble').textContent='이건 좀..😅';
   }
-  document.getElementById('snackCard').style.transform = correct?'scale(1.2)':'scale(0.8) rotate(10deg)';
+  const cardEl = document.getElementById('snackCard');
+  // 날아가는 방향: 정답이면 정답 방향, 오답이면 잘못된 방향
+  const flyDir = choice==='order'?'fly-left':'fly-right';
+  cardEl.classList.add(flyDir);
   document.getElementById('snackScore').textContent = '점수: '+state.score+' | 콤보: '+state.combo;
   setTimeout(()=>{
-    document.getElementById('snackCard').style.transform = 'scale(1)';
+    cardEl.classList.remove('fly-left','fly-right');
+    cardEl.style.transform = '';
     document.getElementById('snkLeftBubble').textContent='이번 주 간식 뭐 시킬까요?';
     document.getElementById('snkRightBubble').textContent='냉장고 자리부터 비웁시다.';
     state.current++;
     showSnackItem();
-  },600);
+  },450);
 }
 
 function snackTimeout() {
