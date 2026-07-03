@@ -864,7 +864,11 @@ const SCHEDULE = [
   { hour: 17, type: 'GAME', title: '저메추 과반수', icon: '🍽️', color: '#fb923c' },
   { hour: 18, type: 'RESULT', title: '오늘의 MVP', icon: '🏆', color: '#fbbf24' }
 ];
-const DEMO_TEAM = [];
+const DEMO_TEAM = [
+  { name: 'Jeff Hong', score: 580 },
+  { name: '제니퍼', score: 540 },
+  { name: '이박사', score: 510 }
+];
 // FREE PLAY MODE: 모든 스테이지 오픈
 let userName = '';
 let gameResults = {};
@@ -1046,13 +1050,13 @@ function showNextMole() {
   moleEl.classList.remove('mole-hit');
   moleEl.classList.add('mole-up');
   moleEl.dataset.task = state.tasks[state.appeared-1];
-  // 짧은 시간 후 사라짐 (650ms)
+  // 짧은 시간 후 사라짐 (680ms)
   state.moleInterval = setTimeout(()=>{
     state.moleActive = false;
     moleEl.classList.remove('mole-up');
     if(state.appeared < state.total) showNextMole();
     else setTimeout(()=>endMoleGame(),500);
-  }, 650);
+  }, 680);
 }
 
 function hitMole(hole) {
@@ -1080,8 +1084,8 @@ function endMoleGame() {
   clearInterval(state.interval);
   state.started = false;
   const hitCount = state.hit.length;
-  let score = Math.round((hitCount/7)*100);
-  score = Math.max(20, Math.min(100, score));
+  const scoreMap = [0, 40, 50, 60, 70, 80, 90, 100];
+  let score = scoreMap[hitCount] || 0;
   let msg = hitCount>=7?'완벽한 워밍업! 오늘 업무 준비 완료!':hitCount>=5?'좋은 시작! 빠릿빠릿!':hitCount>=3?'아침엔 좀 느릿해도 괜찮아요':'커피부터 한 잔 하고 와요...';
   document.getElementById('gameArea').insertAdjacentHTML('beforeend',`<div class="game-result"><div class="score">${score}점</div><div class="message">${msg}<br><span style="font-size:0.8em;color:var(--yellow);margin-top:8px;display:inline-block">체크리스트를 확인하며 오늘도 빈틈없는 DX 팀원으로서 힘찬 하루를 시작해봅시다!</span></div></div>`);
   saveResult(9, score);
@@ -1226,9 +1230,14 @@ function typingSubmit() {
   const minLen=Math.min(target.length,userText.length);
   for(let i=0;i<minLen;i++){if(target[i]!==userText[i])errors++;}
   errors+=Math.abs(target.length-userText.length);
-  const baseTime=state.sentence.length*0.3;
-  let score=Math.round(Math.round((baseTime/elapsed)*80)-errors*3);
+  // 정확도 계산 (입력 길이가 원본의 절반 미만이면 최소 점수)
+  const accuracy = Math.max(0, 1 - (errors / target.length));
+  const baseTime=state.sentence.length*0.27;
+  let timeScore=Math.round((baseTime/elapsed)*80);
+  let score=Math.round(timeScore * accuracy);
   score=Math.max(20,Math.min(100,score));
+  if(errors > 0) score = Math.min(95, score); // 오타 1개라도 있으면 100점 불가
+  if(userText.length < target.length * 0.3) score = 20; // 너무 짧은 입력은 최소점
   const area=document.getElementById('gameArea');
   area.innerHTML=`
     <h2>⌨️ STAGE 3: 명언 타자게임</h2>
@@ -1379,8 +1388,8 @@ function submitRiddle() {
   const isCorrect = userAnswer===state.answer;
   let score=0;
   if(isCorrect){
-    const map=[100,80,60,40,20];
-    score = state.revealed===0?100:(map[Math.min(state.revealed-1,4)]||20);
+    const map=[100,100,80,70,60,50];
+    score = state.revealed===0?100:(map[Math.min(state.revealed,5)]||50);
   }
   const msg = isCorrect?`정답! ${state.revealed}개 단서로 맞혔어요!`:`오답이에요. 정답은 "${state.answer}"`;
   document.getElementById('gameArea').innerHTML+=`<div class="game-result"><div class="score">${score}점</div><div class="message">${msg}</div></div>`;
@@ -1617,11 +1626,13 @@ function showResult() {
     scoresHTML+=`<div class="result-score-item"><span class="name">${name}</span><span class="pts">${s}</span></div>`;
   });
 
-  let ranking=[{name:userName,score:totalScore}];
+  let ranking=[...DEMO_TEAM,{name:userName,score:totalScore}];
+  ranking.sort((a,b)=>b.score-a.score);
   let rankHTML='';
   ranking.forEach((p,i)=>{
+    const isMe=p.name===userName;
     const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
-    rankHTML+=`<div class="ranking-item me" style="animation:slideIn 0.4s ease ${i*0.1}s both"><div class="rank">${medal||i+1}</div><div class="r-name">${p.name}</div><div class="r-score">${p.score}점</div></div>`;
+    rankHTML+=`<div class="ranking-item ${isMe?'me':''}" style="animation:slideIn 0.4s ease ${i*0.1}s both"><div class="rank">${medal||i+1}</div><div class="r-name">${p.name}${isMe?' (나)':''}</div><div class="r-score">${p.score}점</div></div>`;
   });
   const mvp=ranking[0];
 
@@ -1641,6 +1652,11 @@ function showResult() {
         <p style="font-size:1.1em;color:var(--text-muted);margin-top:4px">${mvp.score}점</p>
         <p style="font-size:0.85em;color:var(--text-muted);margin-top:12px">🎉 오늘 하루도 수고했어요!</p>
       </div>
+
+      <!-- 팀 랭킹 -->
+      <div class="ranking-list" style="margin-top:24px;animation:popIn 0.5s ease 0.4s both">
+        <h3 style="margin-bottom:12px;color:var(--primary-light);font-size:1.1em">📊 랭킹</h3>
+        ${rankHTML}
       </div>
 
       <!-- 내 점수 + 스테이지별 점수 (좌우 배치) -->
